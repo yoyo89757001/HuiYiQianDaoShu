@@ -32,11 +32,12 @@ public class BaseActivity extends Activity {
         switch (baoCunBean.getMoban()){
 
             case 1:
-                startActivity(new Intent(BaseActivity.this,XinChunActivity.class));
+                startActivity(new Intent(BaseActivity.this,ShunDeActivity1.class));
                 finish();
                 break;
             case 2:
-
+                startActivity(new Intent(BaseActivity.this,XinChunActivity.class));
+                finish();
                 break;
             case 3:
 

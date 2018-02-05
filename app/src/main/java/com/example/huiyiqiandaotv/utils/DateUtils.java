@@ -206,7 +206,14 @@ public class DateUtils {
     }
 
     public static String time(String time) {
-        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd HH:mm",Locale.CHINA);
+        SimpleDateFormat sdr = new SimpleDateFormat("yyyy-MM-dd",Locale.CHINA);
+        @SuppressWarnings("unused")
+        long lcc = Long.valueOf(time);
+//        int i = Integer.parseInt(time);
+        return sdr.format(new Date(lcc));
+    }
+    public static String time2(String time) {
+        SimpleDateFormat sdr = new SimpleDateFormat("HH:mm",Locale.CHINA);
         @SuppressWarnings("unused")
         long lcc = Long.valueOf(time);
 //        int i = Integer.parseInt(time);

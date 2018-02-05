@@ -122,12 +122,14 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
         //  Log.d("SheZhiActivity", "baoCunBean.getMoban():" + baoCunBean.getMoban());
         switch (baoCunBean.getMoban()){
             case 1:
-                startActivity(new Intent(SheZhiActivity.this,XinChunActivity.class));
-                SystemClock.sleep(1600);
 
+                startActivity(new Intent(SheZhiActivity.this,ShunDeActivity1.class));
+                SystemClock.sleep(1200);
                 break;
 
             case 2:
+                startActivity(new Intent(SheZhiActivity.this,XinChunActivity.class));
+                SystemClock.sleep(1200);
                 break;
             case 3:
 

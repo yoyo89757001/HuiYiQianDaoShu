@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ffflll"
-    android:background="@drawable/xinchun1"
+    android:background="@drawable/yg_bgbgbg"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,7 +24,6 @@
 
     <TextView
         android:textSize="50sp"
-        android:text="新春快乐"
         android:gravity="center"
         android:id="@+id/zhuangtai55"
         android:textColor="@color/jinhuang"
@@ -43,28 +42,7 @@
 
 
 
-    <ImageView
-        android:src="@drawable/xinchun3"
-        android:id="@+id/left_im"
-        android:scaleType="fitXY"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
-    <ImageView
-        android:src="@drawable/xinchun4"
-        android:id="@+id/right_im"
-        android:scaleType="fitXY"
-        android:layout_alignParentRight="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
-    <ImageView
-        android:src="@drawable/xinchun2"
-        android:id="@+id/bootn_im"
-        android:scaleType="fitXY"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
 
 </RelativeLayout>

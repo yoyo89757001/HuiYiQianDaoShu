@@ -1,5 +1,9 @@
 package com.example.huiyiqiandaotv.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -25,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AccelerateInterpolator;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,7 +39,6 @@ import android.widget.TextView;
 
 import com.badlogic.gdx.backends.android.AndroidFragmentApplication;
 import com.badoo.mobile.util.WeakHandler;
-
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.SpeechSynthesizerListener;
 import com.baidu.tts.client.TtsMode;
@@ -65,7 +69,9 @@ import com.example.huiyiqiandaotv.tts.control.MySyntherizer;
 import com.example.huiyiqiandaotv.tts.control.NonBlockSyntherizer;
 import com.example.huiyiqiandaotv.tts.listener.UiMessageListener;
 import com.example.huiyiqiandaotv.tts.util.OfflineResource;
+import com.example.huiyiqiandaotv.utils.DateUtils;
 import com.example.huiyiqiandaotv.utils.FileUtil;
+import com.example.huiyiqiandaotv.utils.GlideRoundTransform;
 import com.example.huiyiqiandaotv.utils.GsonUtil;
 import com.example.huiyiqiandaotv.utils.Utils;
 import com.example.huiyiqiandaotv.view.GlideCircleTransform;
@@ -77,7 +83,6 @@ import com.facebook.rebound.SpringSystem;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.sdsmdg.tastytoast.TastyToast;
-
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -110,7 +115,7 @@ import okhttp3.ResponseBody;
 import sun.misc.BASE64Decoder;
 
 
-public class XinChunActivity extends FragmentActivity implements AndroidFragmentApplication.Callbacks,RecytviewCash {
+public class ShunDeActivity1 extends FragmentActivity implements AndroidFragmentApplication.Callbacks,RecytviewCash {
 	private final static String TAG = "WebsocketPushMsg";
 //	private IjkVideoView ijkVideoView;
 	private MyReceiver myReceiver=null;
@@ -146,9 +151,9 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 	private boolean isLianJie=false;
 	//private List<AllUserBean.DataBean> dataBeanList=new ArrayList<>();
 	//private RelativeLayout top_rl;
-	private TextView t1,t2;
+	private TextView t1,t2,t3;
 	private TanChuangBeanDao tanChuangBeanDao=null;
-	private Typeface typeFace1;
+	private Typeface typeFace1,typeFace2;
 	protected Handler mainHandler;
 	private String appId = "10588094";
 	private String appKey = "dfudSSFfNNhDCDoK7UG9G5jn";
@@ -239,17 +244,17 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					break;
 				case 19: //
 
-					if (lingdaoList.size()>0){
-						adapter3.notifyItemRemoved(0);
-						lingdaoList.remove(0);
+					if (lingdaoList.size()>2){
+						adapter3.notifyItemRemoved(2);
+						lingdaoList.remove(2);
 					}
 
 					break;
 				case  188:
 
-					if (moshengren.size()>0){
-						adapter2.notifyItemRemoved(0);
-						moshengren.remove(0);
+					if (moshengren.size()>1){
+						adapter2.notifyItemRemoved(1);
+						moshengren.remove(1);
 					}
 					break;
 
@@ -270,7 +275,8 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					bean.setGonghao(dataBean.getJob_number()==null ? "":dataBean.getJob_number());
 					bean.setTouxiang(dataBean.getAvatar());
 					if (!(dataBean.getDepartment()!=null && dataBean.getDepartment().equals("黑名单"))) {
-						if ( dataBean.getSubject_type()==2 ||dataBean.getRemark().contains("vip")){
+						if ( dataBean.getSubject_type()==2||dataBean.getRemark().contains("vip")){
+							Log.d(TAG, "领导");
 							int a = 0;
 							for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
 								if (Objects.equals(lingdaoList.get(i2).getId(), bean.getId())) {
@@ -507,6 +513,15 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						bean.setType(-33);
 						yuangongList.add(bean);
 
+						moshengren.add(bean);
+
+						TanChuangBean bean1=new TanChuangBean();
+						bean1.setBytes(null);
+						bean1.setName(null);
+						bean1.setType(-2);
+						bean1.setTouxiang(null);
+						lingdaoList.add(bean1);
+						lingdaoList.add(bean1);
 
 						if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE || (!recyclerView.isComputingLayout())) {
 							adapter.notifyDataSetChanged();
@@ -540,33 +555,31 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		//DisplayMetrics dm = getResources().getDisplayMetrics();
-		dw = Utils.getDisplaySize(XinChunActivity.this).x;
-		dh = Utils.getDisplaySize(XinChunActivity.this).y;
+		dw = Utils.getDisplaySize(ShunDeActivity1.this).x;
+		dh = Utils.getDisplaySize(ShunDeActivity1.this).y;
 
-		setContentView(R.layout.xinchuna);
+		setContentView(R.layout.shuide1);
 		wangluo = (TextView) findViewById(R.id.wangluo);
 		t1= (TextView) findViewById(R.id.t1);
 		t2= (TextView) findViewById(R.id.t2);
+		t3= (TextView) findViewById(R.id.t3);
 
 		m_container = (FrameLayout) findViewById(R.id.lyt_container);
 		m_box2dFgm = new Box2DFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.lyt_container, m_box2dFgm).commit();
 		showBox2dFgmFullScreen();
 
-
-
-
+		logo_im= (ImageView) findViewById(R.id.logo_im);
 		typeFace1 = Typeface.createFromAsset(getAssets(), "fonts/xk.TTF");
-		t1.setTypeface(typeFace1);
-		if (baoCunBean.getWenzi()!=null)
-		t1.setText(baoCunBean.getWenzi());
-		if (baoCunBean.getSize()!=0){
-			t1.setTextSize(baoCunBean.getSize());
-		}
+		typeFace2 = Typeface.createFromAsset(getAssets(), "fonts/FZZYJW.TTF");
+		t1.setTypeface(typeFace2);
 		t2.setTypeface(typeFace1);
+		t3.setTypeface(typeFace2);
+		t1.setText(DateUtils.time(System.currentTimeMillis()+""));
+		t3.setText(DateUtils.time2(System.currentTimeMillis()+""));
+
 		t2.setText("技术支持:禾本智能科技");
 
-		logo_im= (ImageView) findViewById(R.id.logo_im);
 		mainHandler = new Handler() {
 			/*
              * @param msg
@@ -583,6 +596,13 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		yuangongList = new Vector<>();
 		moshengren = new Vector<>();
 
+		TanChuangBean bean1=new TanChuangBean();
+		bean1.setBytes(null);
+		bean1.setName(null);
+		bean1.setType(-2);
+		bean1.setTouxiang(null);
+		lingdaoList.add(bean1);
+		lingdaoList.add(bean1);
 
 		TanChuangBean bean=new TanChuangBean();
 		bean.setName("");
@@ -592,6 +612,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		bean.setType(-33);
 		yuangongList.add(bean);
 
+		moshengren.add(bean);
 
 		Button button = (Button) findViewById(R.id.dddk);
 		button.setOnClickListener(new View.OnClickListener() {
@@ -599,7 +620,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			public void onClick(View v) {
 				//chongzhi();
 
-				startActivity(new Intent(XinChunActivity.this, SheZhiActivity.class));
+				startActivity(new Intent(ShunDeActivity1.this, SheZhiActivity.class));
 				finish();
 			}
 		});
@@ -667,10 +688,10 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		//	mSurfaceView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
 
-		manager = new WrapContentLinearLayoutManager(XinChunActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
+		manager = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.HORIZONTAL,false,this);
 		recyclerView.setLayoutManager(manager);
 
-		manager2 = new WrapContentLinearLayoutManager(XinChunActivity.this,LinearLayoutManager.VERTICAL,false,this);
+		manager2 = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.HORIZONTAL,false,this);
 	//	recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
 		recyclerView2.setLayoutManager(manager2);
 		//recyclerView.addItemDecoration(new MyDecoration(VlcVideoActivity.this, LinearLayoutManager.VERTICAL,20,R.color.transparent));
@@ -678,39 +699,32 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		adapter = new YuanGongAdapter( yuangongList);
 		recyclerView.setAdapter(adapter);
 
-		adapter2 = new MyAdapter2(R.layout.xinchun_msr_item, moshengren);
+		adapter2 = new MyAdapter2(R.layout.shunde_yg_item, moshengren);
 		recyclerView2.setAdapter(adapter2);
 
-		manager3 = new WrapContentLinearLayoutManager(XinChunActivity.this,LinearLayoutManager.VERTICAL,false,this);
+		manager3 = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.VERTICAL,false,this);
 		//	recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
 		recyclerView3.setLayoutManager(manager3);
-		adapter3 = new MyAdapter3(R.layout.xinchun_vip_item, lingdaoList);
+		adapter3 = new MyAdapter3(R.layout.shunde_vip_item, lingdaoList);
 		recyclerView3.setAdapter(adapter3);
 
 
-		RelativeLayout.LayoutParams  wenzi= (RelativeLayout.LayoutParams) t1.getLayoutParams();
-		wenzi.topMargin=dh*3/5;
-		t1.setLayoutParams(wenzi);
-		t1.invalidate();
-
 		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView2.getLayoutParams();
-		params.topMargin=dh/3;
-		params.width=(dw*3)/5;
+		params.height=dh/3;
 		recyclerView2.setLayoutParams(params);
 		recyclerView2.invalidate();
 
 		//Log.d(TAG, "si:" + si);
 		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
-
-		params2.height=dh*2/3;
+		params2.height=dh/3;
 		recyclerView.setLayoutParams(params2);
 		recyclerView.invalidate();
 
 
-		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) recyclerView3.getLayoutParams();
-		params3.height=(dh*2)/3;
-		recyclerView3.setLayoutParams(params3);
-		recyclerView3.invalidate();
+//		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) recyclerView3.getLayoutParams();
+//		params3.height=(dh*2)/3;
+//		recyclerView3.setLayoutParams(params3);
+//		recyclerView3.invalidate();
 
 	//	link_login();
 
@@ -719,8 +733,8 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			public void run() {
 
 				SystemClock.sleep(10000);
-				sendBroadcast(new Intent(XinChunActivity.this,AlarmReceiver.class));
-				m_weakHandler.postDelayed(m_runnableSendStar, 50);
+				sendBroadcast(new Intent(ShunDeActivity1.this,AlarmReceiver.class));
+				//m_weakHandler.postDelayed(m_runnableSendStar, 50);
 			}
 		}).start();
 
@@ -821,7 +835,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		//创建新View，被LayoutManager所调用
 		@Override
 		public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.xinchun_yg_item,viewGroup,false);
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shunde_yg_item,viewGroup,false);
 			return new ViewHolder(view);
 		}
 		//将数据与界面进行绑定的操作
@@ -856,6 +870,11 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						helper.zhuangtai2.setTypeface(typeFace1);
 						//	name.setText("欢迎 "+item.getName()+" 领导");
 						helper.zhuangtai.setText(datas.get(position).getName());
+						if (datas.get(position).getRemark().equals("访客")){
+							helper.zhuangtai2.setText("访客");
+						}else {
+							helper.zhuangtai2.setText("员工");
+						}
 
 						//rl.setBackgroundResource(R.drawable.shuzi_bg2);
 						//synthesizer.speak("欢迎"+item.getName()+"领导，莅临指导");
@@ -881,6 +900,12 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						helper.zhuangtai.setTypeface(typeFace1);
 						//name.setText(item.getName());
 						helper.zhuangtai.setText(datas.get(position).getName());
+						if (datas.get(position).getRemark().equals("员工")){
+							helper.zhuangtai2.setText("员工");
+						}else {
+							helper.zhuangtai2.setText("访客");
+						}
+
 						//helper.zhuangtai.setText("识别成功");
 
 						//richeng.setText("");
@@ -970,130 +995,130 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) helper.imageView.getLayoutParams();
 			//弹窗的高宽
-			lp2.width=dw/10;
-			lp2.topMargin=dh/6;
-			lp2.height=dw/10;
+			lp2.width=dw/8;
+			lp2.topMargin=dw/10;
+			lp2.height=dw/8;
 			helper.imageView.setLayoutParams(lp2);
 			helper.imageView.invalidate();
 
 
 
 			RelativeLayout.LayoutParams lp9 = (RelativeLayout.LayoutParams) helper.lltt.getLayoutParams();
-			lp9.topMargin=dh/16;
+			lp9.topMargin=dw/16;
 			helper.lltt.setLayoutParams(lp9);
 			helper.lltt.invalidate();
 
-			RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) helper.left_im.getLayoutParams();
-			//左边图片
-			lp4.leftMargin=-(dw/9);
-			lp4.width=dw/9;
-			lp4.height=dw/9;
-			helper.left_im.setLayoutParams(lp4);
-			helper.left_im.invalidate();
-
-			RelativeLayout.LayoutParams lp5 = (RelativeLayout.LayoutParams) helper.right_im.getLayoutParams();
-			//右边图片
-			lp5.rightMargin=-(dw/8);
-			lp5.width=dw/8;
-			lp5.height=dh/3;
-			helper.right_im.setLayoutParams(lp5);
-			helper.right_im.invalidate();
-
-			RelativeLayout.LayoutParams lp6 = (RelativeLayout.LayoutParams) helper.booton_im.getLayoutParams();
-			//下面图片
-			lp6.bottomMargin=-(dw/8);
-			lp6.height=dw/8;
-			helper.booton_im.setLayoutParams(lp6);
-			helper.booton_im.invalidate();
-
-			SpringSystem springSystem = SpringSystem.create();
-			final Spring spring = springSystem.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					helper.left_im.setTranslationX(value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring.setEndValue(dw/9);
-
-			//右边图片
-			SpringSystem springSystem2 = SpringSystem.create();
-			final Spring spring2 = springSystem2.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring2.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring2.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					helper.right_im.setTranslationX(-value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring2.setEndValue(dw/8);
-
-			//下面图片
-			SpringSystem springSystem3 = SpringSystem.create();
-			final Spring spring3 = springSystem3.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring3.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					helper.booton_im.setTranslationY(-value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring3.setEndValue(dw/8);
+//			RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) helper.left_im.getLayoutParams();
+//			//左边图片
+//			lp4.leftMargin=-(dw/9);
+//			lp4.width=dw/9;
+//			lp4.height=dw/9;
+//			helper.left_im.setLayoutParams(lp4);
+//			helper.left_im.invalidate();
+//
+//			RelativeLayout.LayoutParams lp5 = (RelativeLayout.LayoutParams) helper.right_im.getLayoutParams();
+//			//右边图片
+//			lp5.rightMargin=-(dw/8);
+//			lp5.width=dw/8;
+//			lp5.height=dh/3;
+//			helper.right_im.setLayoutParams(lp5);
+//			helper.right_im.invalidate();
+//
+//			RelativeLayout.LayoutParams lp6 = (RelativeLayout.LayoutParams) helper.booton_im.getLayoutParams();
+//			//下面图片
+//			lp6.bottomMargin=-(dw/8);
+//			lp6.height=dw/8;
+//			helper.booton_im.setLayoutParams(lp6);
+//			helper.booton_im.invalidate();
+//
+//			SpringSystem springSystem = SpringSystem.create();
+//			final Spring spring = springSystem.createSpring();
+//			//两个参数分别是弹力系数和阻力系数
+//			spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
+//			// 添加弹簧监听器
+//			spring.addListener(new SimpleSpringListener() {
+//				@Override
+//				public void onSpringUpdate(Spring spring) {
+//					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+//					float value = (float) spring.getCurrentValue();
+//					helper.left_im.setTranslationX(value);
+//					//	Log.d(TAG, "value:" + value);
+//					// float scale = value;
+//					//基于Y轴的弹簧阻尼动画
+//					//	Log.d(TAG, "value:" + value);
+//					// 对图片的伸缩动画
+//					//float scale = 1f - (value * 0.5f);
+//					//	helper.zhuangtai.setScaleX(value);
+//					//zhuangtai.setScaleY(value);
+//				}
+//
+//				@Override
+//				public void onSpringEndStateChange(Spring spring) {
+//					super.onSpringEndStateChange(spring);
+//				}
+//			});
+//			// 设置动画结束值
+//			spring.setEndValue(dw/9);
+//
+//			//右边图片
+//			SpringSystem springSystem2 = SpringSystem.create();
+//			final Spring spring2 = springSystem2.createSpring();
+//			//两个参数分别是弹力系数和阻力系数
+//			spring2.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
+//			// 添加弹簧监听器
+//			spring2.addListener(new SimpleSpringListener() {
+//				@Override
+//				public void onSpringUpdate(Spring spring) {
+//					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+//					float value = (float) spring.getCurrentValue();
+//					helper.right_im.setTranslationX(-value);
+//					//	Log.d(TAG, "value:" + value);
+//					// float scale = value;
+//					//基于Y轴的弹簧阻尼动画
+//					//	Log.d(TAG, "value:" + value);
+//					// 对图片的伸缩动画
+//					//float scale = 1f - (value * 0.5f);
+//					//	helper.zhuangtai.setScaleX(value);
+//					//zhuangtai.setScaleY(value);
+//				}
+//
+//				@Override
+//				public void onSpringEndStateChange(Spring spring) {
+//					super.onSpringEndStateChange(spring);
+//				}
+//			});
+//			// 设置动画结束值
+//			spring2.setEndValue(dw/8);
+//
+//			//下面图片
+//			SpringSystem springSystem3 = SpringSystem.create();
+//			final Spring spring3 = springSystem3.createSpring();
+//			//两个参数分别是弹力系数和阻力系数
+//			spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
+//			// 添加弹簧监听器
+//			spring3.addListener(new SimpleSpringListener() {
+//				@Override
+//				public void onSpringUpdate(Spring spring) {
+//					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
+//					float value = (float) spring.getCurrentValue();
+//					helper.booton_im.setTranslationY(-value);
+//					//	Log.d(TAG, "value:" + value);
+//					// float scale = value;
+//					//基于Y轴的弹簧阻尼动画
+//					//	Log.d(TAG, "value:" + value);
+//					// 对图片的伸缩动画
+//					//float scale = 1f - (value * 0.5f);
+//					//	helper.zhuangtai.setScaleX(value);
+//					//zhuangtai.setScaleY(value);
+//				}
+//
+//				@Override
+//				public void onSpringEndStateChange(Spring spring) {
+//					super.onSpringEndStateChange(spring);
+//				}
+//			});
+//			// 设置动画结束值
+//			spring3.setEndValue(dw/8);
 
 		}
 		//获取数据的数量
@@ -1110,7 +1135,6 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 			private ViewHolder(View view){
 				super(view);
-				t1 = (TextView) view.findViewById(R.id.t1);
 				imageView= (ImageView) view.findViewById(R.id.touxiang);
 				left_im= (ImageView) view.findViewById(R.id.left_im);
 				right_im= (ImageView) view.findViewById(R.id.right_im);
@@ -1353,107 +1377,185 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 //					.alpha(0,1)
 //					.duration(1000)
 //					.start();
+			if (helper.getLayoutPosition() == 0) {
+				helper.itemView.setVisibility(View.GONE);
 
-			RelativeLayout toprl= helper.getView(R.id.ffflll);
-			TextView t2=helper.getView(R.id.test2);
-			ImageView imageView=helper.getView(R.id.touxiang);
+			} else {
+				ImageView imageView = helper.getView(R.id.touxiang);
+				TextView zhuangtai = helper.getView(R.id.zhuangtai33);
+				TextView zhuangtai2 = helper.getView(R.id.zhuangtai55);
+				RelativeLayout rl = helper.getView(R.id.ffflll);
+				LinearLayout lltt = helper.getView(R.id.lltt);
 
-			//tt.setText(item.getName());
-//			if (helper.getAdapterPosition()==0 ){
-//				toprl.setBackgroundColor(Color.parseColor("#00000000"));
-//				imageView.setImageBitmap(null);
-//				t2.setText("");
-//			}else {
+				helper.itemView.setVisibility(View.VISIBLE);
+
 				switch (item.getType()) {
 					case -1:
 						//陌生人
-						//	toprl.setBackgroundResource(R.drawable.tanchuang);
-
-						t2.setTypeface(typeFace1);
-						t2.setText("新春快乐");
-						//synthesizer.speak("欢迎嘉宾莅临指导");
+						//toprl.setBackgroundResource(R.drawable.msr_bg);
+						//	zhuangtai.setTextColor(Color.RED);
+						//	name.setTextColor(Color.RED);
+//						name.setTypeface(typeFace1);
+//						zhuangtai.setTypeface(typeFace1);
+//						zhuangtai.setText("");
+//						zhuangtai.setVisibility(View.GONE);
+//						name.setText("欢迎嘉宾莅临指导");
+//						rl.setBackgroundResource(R.drawable.shuzi_bg1);
+//						synthesizer.speak("欢迎嘉宾莅临指导");
 
 						break;
 					case 0:
 						//员工
+						//toprl.setBackgroundResource(R.drawable.yg_bg);
+						//	name.setTypeface(typeFace1);
+						zhuangtai.setTypeface(typeFace1);
+						zhuangtai2.setTypeface(typeFace1);
+						//	name.setText("欢迎 "+item.getName()+" 领导");
+						zhuangtai.setText(item.getName());
+						if (item.getRemark().equals("访客")) {
+							zhuangtai2.setText("访客");
+						} else {
+							zhuangtai2.setText("员工");
+						}
+
+						//rl.setBackgroundResource(R.drawable.shuzi_bg2);
+						//synthesizer.speak("欢迎"+item.getName()+"领导，莅临指导");
+						//mSpeechSynthesizer.speak("欢迎"+item.getName()+"祝你出入平安.");
+//						String  zt=item.getRemark();
+//						if (zt!=null){
+//							if (zt.equals("")){
+//								zhuangtai.setText("员工");
+//							}else {
+//								zhuangtai.setText(zt);
+//							}
+//						}else {
+//							zhuangtai.setText("员工");
+//						}
+
+						zhuangtai2.setTypeface(typeFace1);
+						zhuangtai.setTypeface(typeFace1);
+						//name.setText(item.getName());
+
+						zhuangtai2.setText("陌生人");
+
 
 						break;
-
 					case 1:
 						//访客
+						//toprl.setBackgroundResource(R.drawable.zidonghuoqu15);
+						//name.setTypeface(typeFace1);
 
+						zhuangtai2.setTypeface(typeFace1);
+						zhuangtai.setTypeface(typeFace1);
+						//name.setText(item.getName());
+						zhuangtai.setText(item.getName());
+						if (item.getRemark().equals("员工")) {
+							zhuangtai2.setText("员工");
+						} else {
+							zhuangtai2.setText("访客");
+						}
+
+						//helper.zhuangtai.setText("识别成功");
+						//richeng.setText("");
+						//name.setText(item.getName());
+						//autoScrollTextView.setText("欢迎你来本公司参观指导。");
 						break;
 					case 2:
+						//	name.setTypeface(typeFace1);
+						zhuangtai2.setTypeface(typeFace1);
+						zhuangtai.setTypeface(typeFace1);
+						zhuangtai.setText(item.getName());
+						//name.setText(item.getName());
+						//helper.zhuangtai.setText("识别成功");
 						//VIP访客
-
+						//	toprl.setBackgroundResource(R.drawable.ms_bg);
+						//	richeng.setText("");
+						//	name.setText(item.getName());
+						//autoScrollTextView.setText("欢迎VIP访客 "+item.getName()+" 来本公司指导工作。");
 						break;
+				}
+				if (item.getTouxiang() != null) {
+					Glide.with(MyApplication.getAppContext())
+							.load(baoCunBean.getTouxiangzhuji() + item.getTouxiang())
+							//.apply(myOptions2)
+							.transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
+							//	.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
+							.into(imageView);
+				} else {
 
+					Glide.with(MyApplication.getAppContext())
+							.load(item.getBytes())
+							//.apply(myOptions)
+							.transform(new GlideCircleTransform(MyApplication.getAppContext(), 4, Color.parseColor("#B00005")))
+							//	.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
+							.into(imageView);
 				}
 
-					if (item.getTouxiang()!=null){
-						Glide.with(MyApplication.getAppContext())
-							//	.load(zhuji+item.getTouxiang())
-								.load("http://121.46.3.20"+item.getTouxiang())
-								//.apply(myOptions)
-								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-								//	.bitmapTransform(new BrightnessFilterTransformation(YiZhongYanShiActivity.this,-0.7f))
-								//.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-								.into(imageView);
-					}else {
-						Glide.with(XinChunActivity.this)
-								.load(item.getBytes())
-								//.load("http://121.46.3.20"+item.getTouxiang())
-								//.apply(myOptions)
-								.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
-								//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-								.into(imageView);
-					}
 
-		//	}
-			RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-			ll.leftMargin=(dw/8);
-			ll.topMargin=(dh/3)/2-((dw/9)/2)-20;
-			ll.width=(dw/9);
-			ll.height=(dw/9);
-			imageView.setLayoutParams(ll);
-			imageView.invalidate();
+//						AnimatorSet animatorSet = new AnimatorSet();
+//			animatorSet.playTogether(
+//					//ObjectAnimator.ofFloat(helper.itemView,"scaleY",0f,1f),
+//					ObjectAnimator.ofFloat(helper.zhuangtai,"scaleX",0f,1f)
+//					//	ObjectAnimator.ofFloat(helper.itemView,"alpha",0f,1f)
+//			);
+//
+//			animatorSet.setDuration(200);
+//			animatorSet.setInterpolator(new AccelerateInterpolator());
+//			animatorSet.addListener(new AnimatorListenerAdapter(){
+//				@Override public void onAnimationEnd(Animator animation) {
+//
+//					AnimatorSet animatorSet2 = new AnimatorSet();
+//					animatorSet2.playTogether(
+//							ObjectAnimator.ofFloat(helper.zhuangtai,"translationX",0f,30,24f,30,20,30,16,30,12,30,8,30,2,30)
+//							//ObjectAnimator.ofFloat(helper.itemView,"alpha",0f,1f)
+//							//	ObjectAnimator.ofFloat(helper.itemView,"scaleY",1f,0.5f,1f)
+//					);
+//					animatorSet2.setInterpolator(new AccelerateInterpolator());
+//					animatorSet2.setDuration(1500);
+//					animatorSet2.start();
+//
+//				}
+//			});
+//			animatorSet.start();
 
-			RecyclerView.LayoutParams  ll2= (RecyclerView.LayoutParams) toprl.getLayoutParams();
-			ll2.height=dh/3;
-			toprl.setLayoutParams(ll2);
-			toprl.invalidate();
+//			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+//			//弹窗的高宽
+////			lp2.leftMargin=(dw-(dw/6))/7;
+//			lp2.width=dw/10;
+//			lp2.height=dw/10;
+//			imageView.setLayoutParams(lp2);
+//			imageView.invalidate();
+//
+//			RecyclerView.LayoutParams lp3 = (RecyclerView.LayoutParams) rl.getLayoutParams();
+//			//弹窗的高宽
+//
+//			lp3.width=((dw*2)/3)/3;
+//			rl.setLayoutParams(lp3);
+//			rl.invalidate();
 
-			SpringSystem springSystem = SpringSystem.create();
-			final Spring spring = springSystem.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(86, 6));
-			// 添加弹簧监听器
-			spring.addListener(new SimpleSpringListener() {
+				RecyclerView.LayoutParams lp3 = (RecyclerView.LayoutParams) rl.getLayoutParams();
+				//弹窗的高宽
+				lp3.leftMargin = 10;
+				lp3.rightMargin = 10;
+				lp3.width = dw / 3;
+				rl.setLayoutParams(lp3);
+				rl.invalidate();
 
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					//Log.d(TAG, "value:" + value);
-					//基于Y轴的弹簧阻尼动画
-				//	helper.itemView.setTranslationY(value);
+				RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
+				//弹窗的高宽
+				lp2.width = dw / 8;
+				lp2.topMargin = dw / 10;
+				lp2.height = dw / 8;
+				imageView.setLayoutParams(lp2);
+				imageView.invalidate();
 
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					helper.itemView.setScaleX(value);
-					helper.itemView.setScaleY(value);
-				}
 
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring.setEndValue(1f);
-
+				RelativeLayout.LayoutParams lp9 = (RelativeLayout.LayoutParams)lltt.getLayoutParams();
+				lp9.topMargin = dw / 16;
+				lltt.setLayoutParams(lp9);
+				lltt.invalidate();
 			}
-
+		}
 
 	}
 
@@ -1470,15 +1572,31 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 		@Override
 		protected void convert(final BaseViewHolder helper, TanChuangBean item) {
-//			AnimatorSet animatorSet = new AnimatorSet();
-//			animatorSet.playTogether(
-//					ObjectAnimator.ofFloat(helper.itemView,"scaleY",0f,1f),
-//					ObjectAnimator.ofFloat(helper.itemView,"scaleX",0f,1f)
-//					//	ObjectAnimator.ofFloat(helper.itemView,"alpha",0f,1f)
-//			);
-//			animatorSet.setDuration(600);
-//			animatorSet.setInterpolator(new AccelerateInterpolator());
-//			animatorSet.start();
+	AnimatorSet animatorSet = new AnimatorSet();
+			animatorSet.playTogether(
+					ObjectAnimator.ofFloat(helper.itemView,"scaleY",0f,1f),
+					ObjectAnimator.ofFloat(helper.itemView,"scaleX",0f,0f)
+					//	ObjectAnimator.ofFloat(helper.itemView,"alpha",0f,1f)
+			);
+			animatorSet.setDuration(200);
+			animatorSet.setInterpolator(new AccelerateInterpolator());
+			animatorSet.addListener(new AnimatorListenerAdapter(){
+				@Override public void onAnimationEnd(Animator animation) {
+
+					AnimatorSet animatorSet2 = new AnimatorSet();
+					animatorSet2.playTogether(
+							ObjectAnimator.ofFloat(helper.itemView,"scaleX",0f,1f)
+							//ObjectAnimator.ofFloat(helper.itemView,"alpha",0f,1f)
+							//	ObjectAnimator.ofFloat(helper.itemView,"scaleY",1f,0.5f,1f)
+					);
+					animatorSet2.setInterpolator(new AccelerateInterpolator());
+					animatorSet2.setDuration(500);
+					animatorSet2.start();
+
+				}
+			});
+			animatorSet.start();
+
 
 //			ViewAnimator
 //					.animate(helper.itemView)
@@ -1487,210 +1605,93 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 //					.duration(1000)
 //					.start();
 
-			RelativeLayout toprl = helper.getView(R.id.ffflll);
-			LinearLayout linearLayout=helper.getView(R.id.zi_ll);
-			TextView t3 = helper.getView(R.id.test3);
-			t3.setTypeface(typeFace1);
-			TextView t4 = helper.getView(R.id.test4);
-			t4.setTypeface(typeFace1);
-			ImageView imageView = helper.getView(R.id.touxiang);
-			final ImageView left_im = helper.getView(R.id.left_im);
-			final ImageView right_im = helper.getView(R.id.right_im);
-			final ImageView booton_im = helper.getView(R.id.bootn_im);
+			RelativeLayout toprl= helper.getView(R.id.ffflll);
 
 
-			//tt.setText(item.getName());
-//			if (helper.getAdapterPosition()==0 ){
-//				toprl.setBackgroundColor(Color.parseColor("#00000000"));
-//				imageView.setImageBitmap(null);
-//				t2.setText("");
-//			}else {
-			switch (item.getType()) {
+			TextView tishi_tv= helper.getView(R.id.tishi_tv);
+			TextView tishi_tv2= helper.getView(R.id.ddd);
+
+			if (helper.getAdapterPosition()==0 ||helper.getAdapterPosition()==1 ){
+				toprl.setBackgroundColor(Color.parseColor("#00000000"));
+				tishi_tv.setText("");
+				tishi_tv2.setText("");
+			}else {
+
+			switch (item.getType()){
 				case -1:
 					//陌生人
 					//	toprl.setBackgroundResource(R.drawable.tanchuang);
 
+
 					break;
 				case 0:
 					//员工
-
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
+					//访客
+					toprl.setBackgroundResource(R.drawable.datc);
+					String sa0="热烈欢迎"+item.getName()+"莅临参观指导";
+					StringBuilder sb0=new StringBuilder();
+					for(int i=0;i<sa0.length();i++){
+						sb0.append((sa0.charAt(i)));//依次加入sb中
+						if((i+1)%(8)==0 &&((i+1)!=sa0.length())){
+							sb0.append("\n");
+						}
+					}
+					tishi_tv.setText(sb0.toString());
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 
 					break;
 
 				case 1:
-					//访客
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
 
+					//访客
+					toprl.setBackgroundResource(R.drawable.datc);
+					String sa="热烈欢迎"+item.getName()+"莅临参观指导";
+					StringBuilder sb=new StringBuilder();
+					for(int i=0;i<sa.length();i++){
+						sb.append((sa.charAt(i)));//依次加入sb中
+						if((i+1)%(8)==0 &&((i+1)!=sa.length())){
+							sb.append("\n");
+						}
+					}
+
+					tishi_tv.setText(sb.toString());
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 					break;
 				case 2:
 					//VIP访客
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
+					toprl.setBackgroundResource(R.drawable.datc);
+					String sa1="热烈欢迎"+item.getName()+"莅临参观指导";
+					StringBuilder sb1=new StringBuilder();
+					for(int i=0;i<sa1.length();i++){
+						sb1.append((sa1.charAt(i)));//依次加入sb中
+						if((i+1)%(8)==0 &&((i+1)!=sa1.length())){
+							sb1.append("\n");
+						}
+					}
 
+					tishi_tv.setText(sb1.toString());
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 					break;
 
 			}
 
 
-			//		}
+			if (item.getTouxiang()!=null){
 
-
-			if (item.getTouxiang() != null) {
 				Glide.with(MyApplication.getAppContext())
-						//	.load(R.drawable.vvv)
 						.load(baoCunBean.getTouxiangzhuji()+item.getTouxiang())
-					//	.load("http://121.46.3.20" + item.getTouxiang())
-						//.apply(myOptions)
-						.transform(new GlideCircleTransform(MyApplication.getAppContext(),0,Color.parseColor("#ffffffff")))
-						//	.bitmapTransform(new BrightnessFilterTransformation(YiZhongYanShiActivity.this,-0.7f))
-						//.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-						.into(imageView);
-			} else {
+						//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+						.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
+						.into((ImageView) helper.getView(R.id.touxiang));
+			}else {
 				Glide.with(MyApplication.getAppContext())
-						//.load(R.drawable.zidonghuoqu1)
-						.load("http://121.46.3.20"+item.getTouxiang())
-						//.apply(myOptions)
-						.transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
-						//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
-						.into(imageView);
+						.load(item.getBytes())
+						//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
+						.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
+						.into((ImageView) helper.getView(R.id.touxiang));
 			}
 
-
-			RelativeLayout.LayoutParams ll = (RelativeLayout.LayoutParams) imageView.getLayoutParams();
-			ll.leftMargin = (dw / 7);
-			ll.topMargin = (dw / 14);
-			ll.width = (dw / 6);
-			ll.height = (dw / 6);
-			imageView.setLayoutParams(ll);
-			imageView.invalidate();
-
-			//字
-			RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) linearLayout.getLayoutParams();
-			layoutParams.leftMargin = (dw / 16);
-			layoutParams.topMargin = (dw / 12);
-			linearLayout.setLayoutParams(layoutParams);
-			linearLayout.invalidate();
-
-			RecyclerView.LayoutParams ll2 = (RecyclerView.LayoutParams) toprl.getLayoutParams();
-			ll2.height = (dh * 2) / 3;
-			toprl.setLayoutParams(ll2);
-			toprl.invalidate();
-
-			RelativeLayout.LayoutParams lp4 = (RelativeLayout.LayoutParams) left_im.getLayoutParams();
-			//左边图片
-			lp4.leftMargin = -(dw / 5);
-			lp4.width = dw / 5;
-			lp4.height = dw / 6;
-			left_im.setLayoutParams(lp4);
-			left_im.invalidate();
-
-			RelativeLayout.LayoutParams lp5 = (RelativeLayout.LayoutParams) right_im.getLayoutParams();
-			//右边图片
-			lp5.rightMargin = -(dw / 5);
-			lp5.width = dw / 5;
-			lp5.height = dh / 3;
-			right_im.setLayoutParams(lp5);
-			right_im.invalidate();
-
-			RelativeLayout.LayoutParams lp6 = (RelativeLayout.LayoutParams) booton_im.getLayoutParams();
-			//下面图片
-			lp6.bottomMargin = -(dw / 6);
-			lp6.height = dw / 6;
-			booton_im.setLayoutParams(lp6);
-			booton_im.invalidate();
-
-			SpringSystem springSystem = SpringSystem.create();
-			final Spring spring = springSystem.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					left_im.setTranslationX(value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring.setEndValue(dw / 5);
-
-			//右边图片
-			SpringSystem springSystem2 = SpringSystem.create();
-			final Spring spring2 = springSystem2.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring2.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring2.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					right_im.setTranslationX(-value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring2.setEndValue(dw / 5);
-
-			//下面图片
-			SpringSystem springSystem3 = SpringSystem.create();
-			final Spring spring3 = springSystem3.createSpring();
-			//两个参数分别是弹力系数和阻力系数
-			spring3.setSpringConfig(SpringConfig.fromOrigamiTensionAndFriction(100, 3));
-			// 添加弹簧监听器
-			spring3.addListener(new SimpleSpringListener() {
-				@Override
-				public void onSpringUpdate(Spring spring) {
-					// value是一个符合弹力变化的一个数，我们根据value可以做出弹簧动画
-					float value = (float) spring.getCurrentValue();
-					booton_im.setTranslationY(-value);
-					//	Log.d(TAG, "value:" + value);
-					// float scale = value;
-					//基于Y轴的弹簧阻尼动画
-					//	Log.d(TAG, "value:" + value);
-					// 对图片的伸缩动画
-					//float scale = 1f - (value * 0.5f);
-					//	helper.zhuangtai.setScaleX(value);
-					//zhuangtai.setScaleY(value);
-				}
-
-				@Override
-				public void onSpringEndStateChange(Spring spring) {
-					super.onSpringEndStateChange(spring);
-				}
-			});
-			// 设置动画结束值
-			spring3.setEndValue(dw / 6);
-		}
+		}}
 
 	}
 
@@ -1966,7 +1967,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			Log.d(TAG, "按下菜单键 ");
 			chongzhi();
 			//isTiaoZhuang=false;
-			startActivity(new Intent(XinChunActivity.this, SheZhiActivity.class));
+			startActivity(new Intent(ShunDeActivity1.this, SheZhiActivity.class));
 			finish();
 		}
 
@@ -2001,9 +2002,8 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 			}
 		}else {
-			TastyToast.makeText(XinChunActivity.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+			TastyToast.makeText(ShunDeActivity1.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 		}
-
 
 		super.onResume();
 
@@ -2013,6 +2013,8 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			// 将图片显示到ImageView中
 			logo_im.setImageBitmap(bm);
 		}
+
+
 	}
 
 	@Override
@@ -2187,7 +2189,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if (!XinChunActivity.this.isFinishing())
+							if (!ShunDeActivity1.this.isFinishing())
 							wangluo.setVisibility(View.GONE);
 						}
 					});
@@ -2287,7 +2289,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					runOnUiThread( new Runnable() {
 						@Override
 						public void run() {
-							if (!XinChunActivity.this.isFinishing()){
+							if (!ShunDeActivity1.this.isFinishing()){
 								wangluo.setVisibility(View.VISIBLE);
 								wangluo.setText("连接识别主机失败,重连中...");
 							}
@@ -2501,7 +2503,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 				}
 				//删除照片
-				Log.d("VlcVideoActivity", "删除照片:" + XinChunActivity.this.deleteFile(fname));
+				Log.d("VlcVideoActivity", "删除照片:" + ShunDeActivity1.this.deleteFile(fname));
 
 				}catch (Exception e){
 					Log.d("WebsocketPushMsg", e.getMessage());

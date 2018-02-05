@@ -323,7 +323,7 @@ public class Box2dEffectView implements ApplicationListener {
 	        Texture tempTexture=null;
 	        float widthSize;
             tempTexture = m_starTextures.get(index - 1001);
-            widthSize=(float) Math.random() * 50f;
+            widthSize=(float) Math.random() * 50.0f;
 
 //	        if (index>=0 && index<1000) {
 //                Log.d("gggggg", "index:" + index);
