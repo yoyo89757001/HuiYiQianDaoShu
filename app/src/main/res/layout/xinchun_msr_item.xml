@@ -15,6 +15,7 @@
         <LinearLayout
             android:layout_toRightOf="@+id/touxiang"
             android:layout_width="match_parent"
+            android:layout_marginLeft="20dp"
             android:gravity="center"
             android:layout_height="match_parent">
 

@@ -25,7 +25,7 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/huiyi_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/NotitleTheme">
         <activity android:name=".ui.BaseActivity"
             android:screenOrientation="landscape">
             <intent-filter>

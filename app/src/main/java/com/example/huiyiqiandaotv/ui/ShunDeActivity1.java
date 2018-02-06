@@ -728,7 +728,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 
 		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) t4.getLayoutParams();
-		params3.bottomMargin=dw/3-80;
+		params3.bottomMargin=dw/3-40;
 		t4.setLayoutParams(params3);
 		t4.invalidate();
 
@@ -793,8 +793,9 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			vlcVout.addCallback(callback);
 			vlcVout.setVideoView(surfaceview);
 			vlcVout.attachViews();
+	}
 
-	}}
+	}
 
 	private void showBox2dFgmFullScreen(){
 		RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)m_container.getLayoutParams();
@@ -2085,6 +2086,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		}
 		Intent intent1=new Intent("guanbi333"); //关闭监听服务
 		sendBroadcast(intent1);
+		getSupportFragmentManager().beginTransaction().remove( m_box2dFgm).commit();
 		super.onStop();
 	}
 
@@ -2101,6 +2103,17 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			m_weakHandler.removeCallbacks(m_runnableSendStar);
 			m_weakHandler.removeCallbacks(m_runnableCrazyMode);
 		}
+		if (vlcVout!=null){
+			vlcVout.detachViews();
+			vlcVout.removeCallback(callback);
+		}
+		mediaPlayer=null;
+		if (media!=null)
+		media.release();
+		if (libvlc!=null)
+		libvlc.release();
+		libvlc=null;
+
 
 		super.onDestroy();
 

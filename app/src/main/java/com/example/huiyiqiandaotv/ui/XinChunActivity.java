@@ -11,6 +11,7 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.Network;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -81,6 +83,10 @@ import com.sdsmdg.tastytoast.TastyToast;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
+import org.videolan.libvlc.IVLCVout;
+import org.videolan.libvlc.LibVLC;
+import org.videolan.libvlc.Media;
+import org.videolan.libvlc.MediaPlayer;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -127,12 +133,12 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 	private WrapContentLinearLayoutManager manager2;
 	private WrapContentLinearLayoutManager manager3;
 	private static WebSocketClient webSocketClient=null;
-//	private MediaPlayer mediaPlayer=null;
-	//private IVLCVout vlcVout=null;
-	//private IVLCVout.Callback callback;
-//	private LibVLC libvlc;
-//	private Media media;
-//	private SurfaceHolder mSurfaceHolder;
+	private MediaPlayer mediaPlayer=null;
+	private IVLCVout vlcVout=null;
+	private IVLCVout.Callback callback;
+	private LibVLC libvlc;
+	private Media media;
+	private SurfaceView surfaceview;
 	private String zhuji=null;
 	private static final String zhuji2="http://121.46.3.20";
 	private static Vector<TanChuangBean> moshengren=null;
@@ -231,8 +237,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					adapter.notifyItemRemoved(1);
 					yuangongList.remove(1);
 
-
-					//	Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
+					//Log.d(TAG, "lingdaoList.size():" + lingdaoList.size());
 			}
 
 
@@ -458,7 +463,6 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 							message.what = 188;
 							handler.sendMessage(message);
 
-
 						} catch (Exception e) {
 
 							Log.d(TAG, e.getMessage() + "陌生人解码");
@@ -507,7 +511,6 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						bean.setType(-33);
 						yuangongList.add(bean);
 
-
 						if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE || (!recyclerView.isComputingLayout())) {
 							adapter.notifyDataSetChanged();
 						}
@@ -516,11 +519,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 			}
 		}).start();
-
-
 	}
-
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -552,8 +551,6 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		m_box2dFgm = new Box2DFragment();
 		getSupportFragmentManager().beginTransaction().add(R.id.lyt_container, m_box2dFgm).commit();
 		showBox2dFgmFullScreen();
-
-
 
 
 		typeFace1 = Typeface.createFromAsset(getAssets(), "fonts/xk.TTF");
@@ -695,14 +692,14 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 		RelativeLayout.LayoutParams  params= (RelativeLayout.LayoutParams) recyclerView2.getLayoutParams();
 		params.topMargin=dh/3;
-		params.width=(dw*3)/5;
+		params.width=(dw*2)/3;
 		recyclerView2.setLayoutParams(params);
 		recyclerView2.invalidate();
 
 		//Log.d(TAG, "si:" + si);
 		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
 
-		params2.height=dh*2/3;
+		params2.height=dh/3;
 		recyclerView.setLayoutParams(params2);
 		recyclerView.invalidate();
 
@@ -712,7 +709,57 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		recyclerView3.setLayoutParams(params3);
 		recyclerView3.invalidate();
 
-	//	link_login();
+		surfaceview = (SurfaceView) findViewById(R.id.surfaceview);
+		RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) surfaceview.getLayoutParams();
+		params6.topMargin=dh/2-20;
+		params6.width=dw*2/3;
+		params6.height=dw/2-80;
+		surfaceview.setLayoutParams(params6);
+		surfaceview.invalidate();
+
+		if (baoCunBean != null) {
+			libvlc = new LibVLC(XinChunActivity.this);
+			mediaPlayer = new MediaPlayer(libvlc);
+			vlcVout = mediaPlayer.getVLCVout();
+
+			callback = new IVLCVout.Callback() {
+				@Override
+				public void onNewLayout(IVLCVout ivlcVout, int i, int i1, int i2, int i3, int i4, int i5) {
+
+				}
+
+				@Override
+				public void onSurfacesCreated(IVLCVout ivlcVout) {
+					try {
+
+						if (mediaPlayer != null && baoCunBean.getShipingIP()!=null) {
+							//
+							media = new Media(libvlc, Uri.parse("rtsp://" + baoCunBean.getShipingIP() + "/user=admin&password=&channel=1&stream=0.sdp"));
+							mediaPlayer.setMedia(media);
+							mediaPlayer.play();
+
+						}
+
+					} catch (Exception e) {
+						Log.d("vlc-newlayout", e.toString());
+					}
+				}
+
+				@Override
+				public void onSurfacesDestroyed(IVLCVout ivlcVout) {
+
+				}
+
+				@Override
+				public void onHardwareAccelerationError(IVLCVout vlcVout) {
+
+				}
+			};
+
+			vlcVout.addCallback(callback);
+			vlcVout.setVideoView(surfaceview);
+			vlcVout.attachViews();
+		}
 
 		new Thread(new Runnable() {
 			@Override
@@ -856,6 +903,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						helper.zhuangtai2.setTypeface(typeFace1);
 						//	name.setText("欢迎 "+item.getName()+" 领导");
 						helper.zhuangtai.setText(datas.get(position).getName());
+						synthesizer.speak("欢迎"+datas.get(position).getName());
 
 						//rl.setBackgroundResource(R.drawable.shuzi_bg2);
 						//synthesizer.speak("欢迎"+item.getName()+"领导，莅临指导");
@@ -881,6 +929,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						helper.zhuangtai.setTypeface(typeFace1);
 						//name.setText(item.getName());
 						helper.zhuangtai.setText(datas.get(position).getName());
+						synthesizer.speak("欢迎"+datas.get(position).getName());
 						//helper.zhuangtai.setText("识别成功");
 
 						//richeng.setText("");
@@ -970,16 +1019,16 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) helper.imageView.getLayoutParams();
 			//弹窗的高宽
-			lp2.width=dw/10;
-			lp2.topMargin=dh/6;
-			lp2.height=dw/10;
+			lp2.width=dw/9;
+			lp2.topMargin=dh/12;
+			lp2.height=dw/9;
 			helper.imageView.setLayoutParams(lp2);
 			helper.imageView.invalidate();
 
 
 
 			RelativeLayout.LayoutParams lp9 = (RelativeLayout.LayoutParams) helper.lltt.getLayoutParams();
-			lp9.topMargin=dh/16;
+			lp9.topMargin=dh/22;
 			helper.lltt.setLayoutParams(lp9);
 			helper.lltt.invalidate();
 
@@ -1412,14 +1461,14 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 		//	}
 			RelativeLayout.LayoutParams  ll= (RelativeLayout.LayoutParams) imageView.getLayoutParams();
 			ll.leftMargin=(dw/8);
-			ll.topMargin=(dh/3)/2-((dw/9)/2)-20;
-			ll.width=(dw/9);
-			ll.height=(dw/9);
+			ll.topMargin=(dh/6)/2-((dw/8)/2)-20;
+			ll.width=(dw/8);
+			ll.height=(dw/8);
 			imageView.setLayoutParams(ll);
 			imageView.invalidate();
 
 			RecyclerView.LayoutParams  ll2= (RecyclerView.LayoutParams) toprl.getLayoutParams();
-			ll2.height=dh/3;
+			ll2.height=dh/6;
 			toprl.setLayoutParams(ll2);
 			toprl.invalidate();
 
@@ -1514,21 +1563,21 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 				case 0:
 					//员工
 
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
+					t3.setText("欢迎" + item.getName() );
+					synthesizer.speak("欢迎" + item.getName());
 
 					break;
 
 				case 1:
 					//访客
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
+					t3.setText("欢迎" + item.getName());
+					synthesizer.speak("欢迎" + item.getName() );
 
 					break;
 				case 2:
 					//VIP访客
-					t3.setText("欢迎" + item.getName() + "领导");
-					synthesizer.speak("欢迎" + item.getName() + ",领导");
+					t3.setText("欢迎" + item.getName());
+					synthesizer.speak("欢迎" + item.getName() );
 
 					break;
 
@@ -1575,7 +1624,8 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			linearLayout.invalidate();
 
 			RecyclerView.LayoutParams ll2 = (RecyclerView.LayoutParams) toprl.getLayoutParams();
-			ll2.height = (dh * 2) / 3;
+			ll2.height = (dh * 2) / 9;
+			ll2.bottomMargin=10;
 			toprl.setLayoutParams(ll2);
 			toprl.invalidate();
 
