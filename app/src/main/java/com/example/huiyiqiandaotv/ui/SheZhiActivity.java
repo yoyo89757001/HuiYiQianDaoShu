@@ -46,9 +46,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
 
         baoCunBeanDao= MyApplication.myApplication.getDaoSession().getBaoCunBeanDao();
         baoCunBean=baoCunBeanDao.load(123456L);
-        if (baoCunBean.getWenzi()==null){
-            baoCunBean.setWenzi("中国电信");
-        }
+
         if (baoCunBean.getTouxiangzhuji()==null){
             baoCunBean.setTouxiangzhuji("http://121.46.3.20");
         }
@@ -428,7 +426,7 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                     @Override public void onAnimationEnd(Animator animation) {
                         //弹窗
                         final XiuGaiWenZiDialog dialog=new XiuGaiWenZiDialog(SheZhiActivity.this);
-                        dialog.setContents(baoCunBean.getWenzi()+"",baoCunBean.getSize()==0? "30":String.valueOf(baoCunBean.getSize()));
+                        dialog.setContents(baoCunBean.getWenzi(),baoCunBean.getSize()==0? "30":String.valueOf(baoCunBean.getSize()));
                         dialog.setOnQueRenListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {

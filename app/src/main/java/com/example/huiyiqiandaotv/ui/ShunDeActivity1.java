@@ -247,9 +247,9 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					break;
 				case 19: //
 
-					if (lingdaoList.size()>2){
-						adapter3.notifyItemRemoved(2);
-						lingdaoList.remove(2);
+					if (lingdaoList.size()>1){
+						adapter3.notifyItemRemoved(1);
+						lingdaoList.remove(1);
 					}
 
 					break;
@@ -455,21 +455,20 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 							bean.setName("陌生人");
 							bean.setType(-1);
 							bean.setTouxiang(null);
-							moshengren.add(bean);
-							final int i3=moshengren.size();
-							Log.d(TAG, "i3:" + i3);
+							lingdaoList.add(bean);
+							final int i3=lingdaoList.size();
 							runOnUiThread(new Runnable() {
 								@Override
 								public void run() {
 
-									adapter2.notifyItemInserted(i3);
-									manager2.scrollToPosition(i3 - 1);
+									adapter3.notifyItemInserted(i3);
+									manager3.scrollToPosition(i3 - 1);
 								}
 							});
 
 							Thread.sleep(8000);
 							Message message = Message.obtain();
-							message.what = 188;
+							message.what = 19;
 							handler.sendMessage(message);
 
 
@@ -529,7 +528,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 						bean1.setType(-2);
 						bean1.setTouxiang(null);
 						lingdaoList.add(bean1);
-						lingdaoList.add(bean1);
+
 
 						if (recyclerView.getScrollState() == RecyclerView.SCROLL_STATE_IDLE || (!recyclerView.isComputingLayout())) {
 							adapter.notifyDataSetChanged();
@@ -587,7 +586,12 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		t4.setTypeface(typeFace1);
 		t1.setText(DateUtils.time(System.currentTimeMillis()+""));
 		t3.setText(DateUtils.time2(System.currentTimeMillis()+""));
-		t4.setText("顺德互联网+基地");
+		if (baoCunBean.getWenzi()!=null){
+			t4.setText(baoCunBean.getWenzi());
+				if (baoCunBean.getSize()!=0)
+			t4.setTextSize(baoCunBean.getSize());
+		}
+
 		t2.setText("技术支持:禾本智能科技");
 
 		mainHandler = new Handler() {
@@ -612,7 +616,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		bean1.setType(-2);
 		bean1.setTouxiang(null);
 		lingdaoList.add(bean1);
-		lingdaoList.add(bean1);
+
 
 		TanChuangBean bean=new TanChuangBean();
 		bean.setName("");
@@ -698,7 +702,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		//	mSurfaceView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
 
-		manager = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.HORIZONTAL,false,this);
+		manager = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.VERTICAL,false,this);
 		recyclerView.setLayoutManager(manager);
 
 		manager2 = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.HORIZONTAL,false,this);
@@ -726,13 +730,13 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 		//Log.d(TAG, "si:" + si);
 		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
-		params2.height=dh/3;
+		params2.width=dw/2;
 		recyclerView.setLayoutParams(params2);
 		recyclerView.invalidate();
 
 
 		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) t4.getLayoutParams();
-		params3.bottomMargin=dw/3-40;
+		params3.topMargin=dw/3-40;
 		t4.setLayoutParams(params3);
 		t4.invalidate();
 
@@ -750,7 +754,6 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 		surfaceview = (SurfaceView) findViewById(R.id.surfaceview);
 		RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) surfaceview.getLayoutParams();
-		params6.width=dw/2;
 		params6.height=dw/2;
 		surfaceview.setLayoutParams(params6);
 		surfaceview.invalidate();
@@ -1048,17 +1051,16 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 			RecyclerView.LayoutParams lp3 = (RecyclerView.LayoutParams) helper.rl.getLayoutParams();
 			//弹窗的高宽
-			lp3.leftMargin=10;
-			lp3.rightMargin=10;
-			lp3.width=dw/3;
+			lp3.bottomMargin=10;
+			lp3.height=dh/3;
 			helper.rl.setLayoutParams(lp3);
 			helper.rl.invalidate();
 
 			RelativeLayout.LayoutParams lp2 = (RelativeLayout.LayoutParams) helper.imageView.getLayoutParams();
 			//弹窗的高宽
-			lp2.width=dw/8;
-			lp2.topMargin=dw/10;
-			lp2.height=dw/8;
+			lp2.width=dw/5;
+			lp2.topMargin=dw/14;
+			lp2.height=dw/5;
 			helper.imageView.setLayoutParams(lp2);
 			helper.imageView.invalidate();
 
@@ -1671,15 +1673,16 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 //					.start();
 
 			RelativeLayout toprl= helper.getView(R.id.ffflll);
-
-
 			TextView tishi_tv= helper.getView(R.id.tishi_tv);
 			TextView tishi_tv2= helper.getView(R.id.ddd);
+			ImageView touxiang=helper.getView(R.id.touxiang);
 
-			if (helper.getAdapterPosition()==0 ||helper.getAdapterPosition()==1 ){
+			if (helper.getAdapterPosition()==0){
 				toprl.setBackgroundColor(Color.parseColor("#00000000"));
 				tishi_tv.setText("");
 				tishi_tv2.setText("");
+				touxiang.setImageBitmap(null);
+
 			}else {
 
 			switch (item.getType()){
@@ -1687,6 +1690,9 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					//陌生人
 					//	toprl.setBackgroundResource(R.drawable.tanchuang);
 
+					toprl.setBackgroundResource(R.drawable.datc);
+					tishi_tv.setText("欢迎莅临指导");
+					synthesizer.speak("欢迎莅临指导");
 
 					break;
 				case 0:
@@ -1747,13 +1753,13 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 						.load(baoCunBean.getTouxiangzhuji()+item.getTouxiang())
 						//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 						.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
-						.into((ImageView) helper.getView(R.id.touxiang));
+						.into(touxiang);
 			}else {
 				Glide.with(MyApplication.getAppContext())
 						.load(item.getBytes())
 						//.transform(new GlideCircleTransform(MyApplication.getAppContext(),2,Color.parseColor("#ffffffff")))
 						.transform(new GlideRoundTransform(MyApplication.getAppContext(), 6))
-						.into((ImageView) helper.getView(R.id.touxiang));
+						.into(touxiang);
 			}
 
 		}}
