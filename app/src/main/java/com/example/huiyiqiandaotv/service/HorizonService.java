@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.util.Log;
@@ -63,7 +64,11 @@ public class HorizonService extends Service {
         long triggerAtTime = SystemClock.elapsedRealtime() + five;
         Intent i = new Intent(this, AlarmReceiver.class);
          pi = PendingIntent.getBroadcast(this, 0, i, 0);
-        manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            manager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, triggerAtTime, pi);
+        }else {
+            manager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP,SystemClock.elapsedRealtime(), triggerAtTime, pi);
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 

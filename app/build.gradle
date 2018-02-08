@@ -4,8 +4,8 @@ android {
     compileSdkVersion 25
     defaultConfig {
         applicationId "com.example.huiyiqiandaoshu"
-        minSdkVersion 19
-        targetSdkVersion 21
+        minSdkVersion 17
+        targetSdkVersion 17
         versionCode 19
         versionName "1.1.8"
         ndk {

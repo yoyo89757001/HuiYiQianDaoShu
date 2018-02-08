@@ -278,7 +278,9 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 						if ( dataBean.getSubject_type()==2 ||dataBean.getRemark().contains("vip")){
 							int a = 0;
 							for (int i2 = 0; i2 < lingdaoList.size(); i2++) {
-								if (Objects.equals(lingdaoList.get(i2).getId(), bean.getId())) {
+								if (lingdaoList.get(i2).getId()==null)
+									continue;
+								if (lingdaoList.get(i2).getId().equals(bean.getId())) {
 									a = 1;
 								}
 							}
@@ -320,7 +322,9 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 
 							int a = 0;
 							for (int i2 = 0; i2 < yuangongList.size(); i2++) {
-								if (Objects.equals(yuangongList.get(i2).getId(), bean.getId())) {
+								if (yuangongList.get(i2).getId()==null)
+									continue;
+								if (yuangongList.get(i2).getId().longValue()==bean.getId().longValue()) {
 									a = 1;
 								}
 							}
