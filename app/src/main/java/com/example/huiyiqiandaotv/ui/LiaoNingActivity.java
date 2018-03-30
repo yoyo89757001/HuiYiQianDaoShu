@@ -101,7 +101,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Vector;
 
 import okhttp3.Call;
@@ -117,7 +116,7 @@ import okhttp3.ResponseBody;
 import sun.misc.BASE64Decoder;
 
 
-public class ShunDeActivity1 extends FragmentActivity implements AndroidFragmentApplication.Callbacks,RecytviewCash {
+public class LiaoNingActivity extends FragmentActivity implements AndroidFragmentApplication.Callbacks,RecytviewCash {
 	private final static String TAG = "WebsocketPushMsg";
 //	private IjkVideoView ijkVideoView;
 	private MyReceiver myReceiver=null;
@@ -139,6 +138,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 	private IVLCVout.Callback callback;
 	private LibVLC libvlc;
 	private Media media;
+	private ImageView dabg;
 	private SurfaceView surfaceview;
 //	private SurfaceHolder mSurfaceHolder;
 	private String zhuji=null;
@@ -175,7 +175,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 	private int m_giftIndex = 1;
 	private int m_giftCounter = 0;
 	public FrameLayout m_container;
-
+	private MyReceiverFile myReceiverFile;
 
 	public  Handler handler=new Handler(new Handler.Callback() {
 
@@ -563,10 +563,10 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);//设置全屏
 		//DisplayMetrics dm = getResources().getDisplayMetrics();
-		dw = Utils.getDisplaySize(ShunDeActivity1.this).x;
-		dh = Utils.getDisplaySize(ShunDeActivity1.this).y;
+		dw = Utils.getDisplaySize(LiaoNingActivity.this).x;
+		dh = Utils.getDisplaySize(LiaoNingActivity.this).y;
 
-		setContentView(R.layout.shuide1);
+		setContentView(R.layout.liaoning);
 		wangluo = (TextView) findViewById(R.id.wangluo);
 		t1= (TextView) findViewById(R.id.t1);
 		t2= (TextView) findViewById(R.id.t2);
@@ -593,7 +593,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			t4.setTextSize(baoCunBean.getSize());
 		}
 
-		t2.setText("技术支持:瑞瞳智能科技");
+		t2.setText("");
 
 		mainHandler = new Handler() {
 			/*
@@ -635,11 +635,19 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			public void onClick(View v) {
 				//chongzhi();
 
-				startActivity(new Intent(ShunDeActivity1.this, SheZhiActivity.class));
+				startActivity(new Intent(LiaoNingActivity.this, SheZhiActivity.class));
 				finish();
 			}
 		});
+		dabg= (ImageView) findViewById(R.id.fffgggg);
 
+		IntentFilter filter = null;
+		myReceiverFile=new MyReceiverFile();
+		filter = new IntentFilter();
+		filter.addAction(Intent.ACTION_MEDIA_MOUNTED);   //接受外媒挂载过滤器
+		filter.addAction(Intent.ACTION_MEDIA_REMOVED);   //接受外媒挂载过滤器
+		filter.addDataScheme("file");
+		registerReceiver(myReceiverFile, filter);
 
 		//实例化过滤器并设置要过滤的广播
 		myReceiver = new MyReceiver();
@@ -703,10 +711,10 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		//	mSurfaceView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
 
-		manager = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.VERTICAL,false,this);
+		manager = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.VERTICAL,false,this);
 		recyclerView.setLayoutManager(manager);
 
-		manager2 = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.HORIZONTAL,false,this);
+		manager2 = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
 	//	recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
 		recyclerView2.setLayoutManager(manager2);
 		//recyclerView.addItemDecoration(new MyDecoration(VlcVideoActivity.this, LinearLayoutManager.VERTICAL,20,R.color.transparent));
@@ -714,13 +722,13 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		adapter = new YuanGongAdapter( yuangongList);
 		recyclerView.setAdapter(adapter);
 
-		adapter2 = new MyAdapter2(R.layout.shunde_msr_item, moshengren);
+		adapter2 = new MyAdapter2(R.layout.liaoning_msr_item, moshengren);
 		recyclerView2.setAdapter(adapter2);
 
-		manager3 = new WrapContentLinearLayoutManager(ShunDeActivity1.this,LinearLayoutManager.VERTICAL,false,this);
+		manager3 = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.VERTICAL,false,this);
 		//	recyclerView2.setLayoutManager(new GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false));
 		recyclerView3.setLayoutManager(manager3);
-		adapter3 = new MyAdapter3(R.layout.shunde_vip_item, lingdaoList);
+		adapter3 = new MyAdapter3(R.layout.liaoning_vip_item, lingdaoList);
 		recyclerView3.setAdapter(adapter3);
 
 
@@ -735,7 +743,6 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		recyclerView.setLayoutParams(params2);
 		recyclerView.invalidate();
 
-
 		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) t4.getLayoutParams();
 		params3.topMargin=dw/3-40;
 		t4.setLayoutParams(params3);
@@ -748,19 +755,20 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			public void run() {
 
 				SystemClock.sleep(10000);
-				sendBroadcast(new Intent(ShunDeActivity1.this,AlarmReceiver.class));
+				sendBroadcast(new Intent(LiaoNingActivity.this,AlarmReceiver.class));
 				//m_weakHandler.postDelayed(m_runnableSendStar, 50);
+
 			}
 		}).start();
 
 		surfaceview = (SurfaceView) findViewById(R.id.surfaceview);
 		RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) surfaceview.getLayoutParams();
-		params6.height=dw/2;
+		params6.height=dw/2-80;
 		surfaceview.setLayoutParams(params6);
 		surfaceview.invalidate();
 
 		if (baoCunBean != null) {
-			libvlc = new LibVLC(ShunDeActivity1.this);
+			libvlc = new LibVLC(LiaoNingActivity.this);
 			mediaPlayer = new MediaPlayer(libvlc);
 			vlcVout = mediaPlayer.getVLCVout();
 
@@ -802,6 +810,34 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			vlcVout.setVideoView(surfaceview);
 			vlcVout.attachViews();
 	}
+
+
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try {
+
+					Thread.sleep(2000);
+					Glide.get(LiaoNingActivity.this).clearDiskCache();
+					runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+
+							Glide.with(MyApplication.getAppContext())
+									.load(FileUtil.createTmpDir(LiaoNingActivity.this)+"dgx.jpg")
+									.into(dabg);
+
+						}
+					});
+
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+
+
+			}
+		}).start();
+
 
 	}
 
@@ -900,7 +936,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 		//创建新View，被LayoutManager所调用
 		@Override
 		public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.shunde_yg_item,viewGroup,false);
+			View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.liaoning_yg_item,viewGroup,false);
 			return new ViewHolder(view);
 		}
 		//将数据与界面进行绑定的操作
@@ -1691,7 +1727,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					//陌生人
 					//	toprl.setBackgroundResource(R.drawable.tanchuang);
 
-					toprl.setBackgroundResource(R.drawable.datc);
+					toprl.setBackgroundResource(R.drawable.liaoning1_03);
 					tishi_tv.setText("欢迎莅临指导");
 					synthesizer.speak("欢迎莅临指导");
 
@@ -1699,7 +1735,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 				case 0:
 					//员工
 					//访客
-					toprl.setBackgroundResource(R.drawable.datc);
+					toprl.setBackgroundResource(R.drawable.liaoning1_03);
 					String sa0="热烈欢迎"+item.getName()+"莅临参观指导";
 					StringBuilder sb0=new StringBuilder();
 					for(int i=0;i<sa0.length();i++){
@@ -1716,7 +1752,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 				case 1:
 
 					//访客
-					toprl.setBackgroundResource(R.drawable.datc);
+					toprl.setBackgroundResource(R.drawable.liaoning1_03);
 					String sa="热烈欢迎"+item.getName()+"莅临参观指导";
 					StringBuilder sb=new StringBuilder();
 					for(int i=0;i<sa.length();i++){
@@ -1731,7 +1767,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					break;
 				case 2:
 					//VIP访客
-					toprl.setBackgroundResource(R.drawable.datc);
+					toprl.setBackgroundResource(R.drawable.liaoning1_03);
 					String sa1="热烈欢迎"+item.getName()+"莅临参观指导";
 					StringBuilder sb1=new StringBuilder();
 					for(int i=0;i<sa1.length();i++){
@@ -2039,7 +2075,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 			Log.d(TAG, "按下菜单键 ");
 			chongzhi();
 			//isTiaoZhuang=false;
-			startActivity(new Intent(ShunDeActivity1.this, SheZhiActivity.class));
+			startActivity(new Intent(LiaoNingActivity.this, SheZhiActivity.class));
 			finish();
 		}
 
@@ -2074,7 +2110,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 			}
 		}else {
-			TastyToast.makeText(ShunDeActivity1.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+			TastyToast.makeText(LiaoNingActivity.this,"请先设置主机地址和摄像头IP",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
 		}
 
 		super.onResume();
@@ -2273,7 +2309,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
-							if (!ShunDeActivity1.this.isFinishing())
+							if (!LiaoNingActivity.this.isFinishing())
 							wangluo.setVisibility(View.GONE);
 						}
 					});
@@ -2373,7 +2409,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 					runOnUiThread( new Runnable() {
 						@Override
 						public void run() {
-							if (!ShunDeActivity1.this.isFinishing()){
+							if (!LiaoNingActivity.this.isFinishing()){
 								wangluo.setVisibility(View.VISIBLE);
 								wangluo.setText("连接识别主机失败,重连中...");
 							}
@@ -2587,7 +2623,7 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 				}
 				//删除照片
-				Log.d("VlcVideoActivity", "删除照片:" + ShunDeActivity1.this.deleteFile(fname));
+				Log.d("VlcVideoActivity", "删除照片:" + LiaoNingActivity.this.deleteFile(fname));
 
 				}catch (Exception e){
 					Log.d("WebsocketPushMsg", e.getMessage());
@@ -2940,7 +2976,48 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 	}
 
+	public class MyReceiverFile  extends BroadcastReceiver {
 
+		@Override
+		public void onReceive(Context context, final Intent intent) {
+			String action = intent.getAction();
+
+			if (action.equals(Intent.ACTION_MEDIA_EJECT)) {
+				//USB设备移除，更新UI
+				Log.d(TAG, "设备被移出");
+				TastyToast.makeText(LiaoNingActivity.this,"设备被移出",TastyToast.LENGTH_SHORT,TastyToast.INFO).show();
+
+
+			} else if (action.equals(Intent.ACTION_MEDIA_MOUNTED)) {
+				//USB设备挂载，更新UI
+				Log.d(TAG, "设备插入");
+				String usbPath = intent.getDataString();//（usb在手机上的路径）
+
+				try {
+
+					Bitmap bitmap = BitmapFactory.decodeFile(usbPath.split("file:///")[1]+File.separator+"dgx.png");
+
+					try {
+
+						File file = new File(FileUtil.createTmpDir(LiaoNingActivity.this)+"dgx.jpg");
+						FileOutputStream out = new FileOutputStream(file);
+						bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+						out.flush();
+						out.close();
+
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+				}catch (Exception e){
+					Log.d(TAG, e.getMessage()+"");
+				}
+
+
+			}
+
+		}
+	}
 
 //	private class DownloadReceiver extends ResultReceiver {
 //		public DownloadReceiver(Handler handler) {

@@ -1,5 +1,6 @@
 package com.example.huiyiqiandaotv.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Environment;
 
@@ -21,7 +22,18 @@ public class FileUtil {
     public static boolean isSupportSDCard() {
         return Environment.getExternalStorageDirectory().exists();
     }
-
+    // 创建一个临时目录，用于复制临时文件，如assets目录下的离线资源文件
+    public static String createTmpDir(Context context) {
+        String sampleDir = "dgxxxx";
+        String tmpDir = Environment.getExternalStorageDirectory().toString() + "/" + sampleDir;
+        if (!com.example.huiyiqiandaotv.tts.util.FileUtil.makeDir(tmpDir)) {
+            tmpDir = context.getExternalFilesDir(sampleDir).getAbsolutePath();
+            if (!com.example.huiyiqiandaotv.tts.util.FileUtil.makeDir(sampleDir)) {
+                throw new RuntimeException("create model resources dir failed :" + tmpDir);
+            }
+        }
+        return tmpDir;
+    }
     /**
      * 检测文件或者路径是否存在
      * <p>

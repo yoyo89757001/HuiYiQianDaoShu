@@ -565,7 +565,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			t1.setTextSize(baoCunBean.getSize());
 		}
 		t2.setTypeface(typeFace1);
-		t2.setText("技术支持:禾本智能科技");
+		t2.setText("技术支持:瑞瞳智能科技");
 
 		logo_im= (ImageView) findViewById(R.id.logo_im);
 		mainHandler = new Handler() {

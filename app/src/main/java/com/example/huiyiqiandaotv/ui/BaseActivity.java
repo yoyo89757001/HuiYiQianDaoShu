@@ -40,7 +40,8 @@ public class BaseActivity extends Activity {
                 finish();
                 break;
             case 3:
-
+                startActivity(new Intent(BaseActivity.this,LiaoNingActivity.class));
+                finish();
                 break;
             case 4:
 

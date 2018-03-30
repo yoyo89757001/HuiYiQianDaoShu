@@ -39,6 +39,11 @@
             android:launchMode="singleInstance"
              android:screenOrientation="portrait"
         />
+        <activity android:name=".ui.LiaoNingActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"
+            />
+
         <activity android:name=".ui.ShunDeActivity1"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"

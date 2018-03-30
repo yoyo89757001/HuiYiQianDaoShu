@@ -130,7 +130,8 @@ public class SheZhiActivity extends Activity implements View.OnClickListener, Vi
                 SystemClock.sleep(1200);
                 break;
             case 3:
-
+                startActivity(new Intent(SheZhiActivity.this,LiaoNingActivity.class));
+                SystemClock.sleep(1200);
                 break;
             case 4:
 
