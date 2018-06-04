@@ -1864,11 +1864,12 @@ public class ShunDeActivity1 extends FragmentActivity implements AndroidFragment
 
 			if (intent.getAction().equals(Intent.ACTION_TIME_TICK)) {
 
-				//String time=(System.currentTimeMillis())+"";
-			//	xiaoshi.setText(DateUtils.timeMinute(time));
-			//	riqi.setText(DateUtils.timesTwo(time));
-				//xingqi.setText(DateUtils.getWeek(System.currentTimeMillis()));
-
+				String time=(System.currentTimeMillis())+"";
+//				xiaoshi.setText(DateUtils.timeMinute(time));
+//				riqi.setText(DateUtils.timesTwo(time));
+//				xingqi.setText(DateUtils.getWeek(System.currentTimeMillis()));
+				t1.setText(DateUtils.time(System.currentTimeMillis()+""));
+				t3.setText(DateUtils.time2(System.currentTimeMillis()+""));
 			}
 				if (intent.getAction().equals("duanxianchonglian")) {
 

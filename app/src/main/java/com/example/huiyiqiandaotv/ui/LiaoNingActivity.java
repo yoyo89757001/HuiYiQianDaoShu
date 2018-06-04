@@ -711,7 +711,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 		//	mSurfaceView.setLayerType(View.LAYER_TYPE_HARDWARE, null);
 
 
-		manager = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.VERTICAL,false,this);
+		manager = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
 		recyclerView.setLayoutManager(manager);
 
 		manager2 = new WrapContentLinearLayoutManager(LiaoNingActivity.this,LinearLayoutManager.HORIZONTAL,false,this);
@@ -738,10 +738,11 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 		recyclerView2.invalidate();
 
 		//Log.d(TAG, "si:" + si);
-		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
-		params2.width=dw/2;
-		recyclerView.setLayoutParams(params2);
-		recyclerView.invalidate();
+//		RelativeLayout.LayoutParams  params2= (RelativeLayout.LayoutParams) recyclerView.getLayoutParams();
+//
+//		params2.height=dw/2;
+//		recyclerView.setLayoutParams(params2);
+//		recyclerView.invalidate();
 
 		RelativeLayout.LayoutParams  params3= (RelativeLayout.LayoutParams) t4.getLayoutParams();
 		params3.topMargin=dw/3-40;
@@ -763,6 +764,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 
 		surfaceview = (SurfaceView) findViewById(R.id.surfaceview);
 		RelativeLayout.LayoutParams  params6= (RelativeLayout.LayoutParams) surfaceview.getLayoutParams();
+		params6.topMargin=dh/2-40;
 		params6.height=dw/2-80;
 		surfaceview.setLayoutParams(params6);
 		surfaceview.invalidate();
@@ -976,7 +978,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 						}else {
 							helper.zhuangtai2.setText("员工");
 						}
-
+						synthesizer.speak("欢迎"+datas.get(position).getName());
 						//rl.setBackgroundResource(R.drawable.shuzi_bg2);
 						//synthesizer.speak("欢迎"+item.getName()+"领导，莅临指导");
 						//mSpeechSynthesizer.speak("欢迎"+item.getName()+"祝你出入平安.");
@@ -1006,7 +1008,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 						}else {
 							helper.zhuangtai2.setText("访客");
 						}
-
+						synthesizer.speak("欢迎"+datas.get(position).getName());
 						//helper.zhuangtai.setText("识别成功");
 
 						//richeng.setText("");
@@ -1025,6 +1027,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 						//	richeng.setText("");
 						//	name.setText(item.getName());
 						//autoScrollTextView.setText("欢迎VIP访客 "+item.getName()+" 来本公司指导工作。");
+						synthesizer.speak("欢迎"+datas.get(position).getName());
 						break;
 				}
 				if (datas.get(position).getTouxiang()!=null){
@@ -1090,6 +1093,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 			//弹窗的高宽
 			lp3.bottomMargin=10;
 			lp3.height=dh/3;
+			lp3.width=dw/3;
 			helper.rl.setLayoutParams(lp3);
 			helper.rl.invalidate();
 
@@ -1745,7 +1749,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 						}
 					}
 					tishi_tv.setText(sb0.toString());
-					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
+					synthesizer.speak("热烈欢迎 "+item.getName()+" 莅临参观指导");
 
 					break;
 
@@ -1763,7 +1767,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 					}
 
 					tishi_tv.setText(sb.toString());
-					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
+					synthesizer.speak("热烈欢迎 "+item.getName()+" 莅临参观指导");
 					break;
 				case 2:
 					//VIP访客
@@ -1778,7 +1782,7 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 					}
 
 					tishi_tv.setText(sb1.toString());
-					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
+					synthesizer.speak("热烈欢迎 "+item.getName()+" 莅临参观指导");
 					break;
 
 			}
