@@ -2148,7 +2148,9 @@ public class LiaoNingActivity extends FragmentActivity implements AndroidFragmen
 		handler.removeCallbacksAndMessages(null);
 		if (myReceiver != null)
 		unregisterReceiver(myReceiver);
+		unregisterReceiver(myReceiverFile);
 		unregisterReceiver(netWorkStateReceiver);
+
 		synthesizer.release();
 		if (m_weakHandler!=null){
 			m_weakHandler.removeCallbacks(m_runnableSendStar);

@@ -1568,20 +1568,20 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 					//员工
 
 					t3.setText("欢迎" + item.getName() );
-					synthesizer.speak("欢迎" + item.getName());
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 
 					break;
 
 				case 1:
 					//访客
 					t3.setText("欢迎" + item.getName());
-					synthesizer.speak("欢迎" + item.getName() );
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 
 					break;
 				case 2:
 					//VIP访客
 					t3.setText("欢迎" + item.getName());
-					synthesizer.speak("欢迎" + item.getName() );
+					synthesizer.speak("热烈欢迎"+item.getName()+"莅临参观指导");
 
 					break;
 
@@ -1604,7 +1604,7 @@ public class XinChunActivity extends FragmentActivity implements AndroidFragment
 			} else {
 				Glide.with(MyApplication.getAppContext())
 						//.load(R.drawable.zidonghuoqu1)
-						.load("http://121.46.3.20"+item.getTouxiang())
+						.load(item.getBytes())
 						//.apply(myOptions)
 						.transform(new GlideCircleTransform(MyApplication.getAppContext(), 2, Color.parseColor("#ffffffff")))
 						//	.bitmapTransform(new GrayscaleTransformation(VlcVideoActivity.this))
